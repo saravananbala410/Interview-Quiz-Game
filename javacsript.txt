@@ -1,0 +1,342 @@
+const questions = [{
+        question: "What is the primary function of the Address Resolution Protocol (ARP) ?",
+        answer: [{
+                text: "To resolve IP addresses to domain names ",
+                correct: false
+            },
+            {
+                text: "To resolve IP addresses to MAC addresses",
+                correct: false
+            },
+            {
+                text: "To resolve MAC addresses to IP addresses",
+                correct: true
+            },
+            {
+                text: "To route packets between networks",
+                correct: false
+            },
+        ]
+    },
+    {
+        question: "What is the main advantage of using a microkernel over a monolithic kernel ?",
+        answer: [{
+                text: "Improved security",
+                correct: false
+            },
+            {
+                text: "Better performance",
+                correct: false
+            },
+            {
+                text: "Easier maintenance",
+                correct: true
+            },
+            {
+                text: "Increased functionality",
+                correct: false
+            },
+        ]
+    },
+    {
+        question: "What is the purpose of normalization in database design ?",
+        answer: [{
+                text: "To enhance data security",
+                correct: false
+            },
+            {
+                text: "To reduce data redundancy",
+                correct: true
+            },
+            {
+                text: "To improve data integrity",
+                correct: false
+            },
+            {
+                text: "To increase data storage capacity",
+                correct: false
+            },
+        ]
+    },
+    {
+        question: "What is the function of the instruction register (IR) in a CPU?",
+        answer: [{
+                text: "To store the address of the next instruction",
+                correct: false
+            },
+            {
+
+            },
+            {
+                text: "To store the result of the current instruction",
+                correct: false
+
+            },
+            {
+                text: "To store the opcode of the current instruction",
+                correct: false
+            }
+        ]
+    },
+    //5th
+    {
+        question: "Which of the following data structures is most efficient for implementing a priority queue in terms of insertion and extraction operations ?",
+        answer: [{
+                text: "Binary Search Tree",
+                correct: true
+            },
+            {
+                text: "Array",
+                correct: false
+            },
+            {
+                text: "Binary Heap",
+                correct: false
+            },
+            {
+                text: "Linked List",
+                correct: false
+            },
+        ]
+    },
+    //6th
+    {
+        question: "In the context of distributed systems, which consistency model ensures that all operations are seen by all processes in the same order, but does not guarantee immediate visibility of operations ?",
+        answer: [{
+                text: "Strong Consistency",
+                correct: false
+            },
+            {
+                text: "Eventual Consistency",
+                correct: false
+            },
+            {
+                text: "Causal Consistency",
+                correct: true
+            },
+            {
+                text: "Linearizability",
+                correct: false
+            },
+        ]
+    },
+    {
+        question: "In a system using the Producer-Consumer problem, which synchronization mechanism is commonly used to prevent race conditions and ensure proper coordination between producers and consumers ?",
+        answer: [{
+                text: "Mutexes",
+                correct: false
+            },
+            {
+                text: "Semaphores",
+                correct: true
+            },
+            {
+                text: "Monitors",
+                correct: false
+            },
+            {
+                text: "Barriers",
+                correct: false
+            },
+        ]
+    },
+    {
+        question: "Which of the following algorithms has a worst-case time complexity of O(n^2) for sorting ?",
+        answer: [{
+                text: "Merge Sort",
+                correct: false
+            },
+            {
+                text: "Quick Sort",
+                correct: false
+            },
+            {
+                text: "Heap Sort",
+                correct: false
+            },
+            {
+                text: "Insertion Sort",
+                correct: true
+            },
+        ]
+    },
+    {
+        question: "In compiler design, which phase is responsible for converting a sequence of tokens into a parse tree ?",
+        answer: [{
+                text: "Lexical Analysis",
+                correct: false
+            },
+            {
+                text: "Code Generation",
+                correct: false
+            }, {
+                text: "Semantic Analysis",
+                correct: false
+            }, {
+                text: "Syntax Analysis",
+                correct: true
+            },
+        ]
+    }, {
+        question: "What is the time complexity of the Depth-First Search (DFS) algorithm in a graph with 𝑉 V vertices and 𝐸 E edges?",
+        answer: [{
+                text: "O(V + E)",
+                correct: true
+            },
+            {
+                text: "O(V^2)",
+                correct: false
+            },
+            {
+                text: "O(E^2)",
+                correct: false
+            },
+            {
+                text: "O(V * E)",
+                correct: false
+            },
+        ]
+    },
+];
+const questionEl = document.getElementById("question");
+const answerButtonEl = document.getElementById("Answer-button");
+const nextbutton = document.getElementById("next-btn");
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    nextbutton.innerHTML = "Next";
+    showQuestion();
+}
+
+function showQuestion() {
+    resetState();
+
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionsNo = currentQuestionIndex + 1;
+    questionEl.innerHTML = questionsNo + " " + currentQuestion.question;
+    currentQuestion.answer.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        answerButtonEl.appendChild(button);
+        if (answer.correct) {
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener("click", selectAnswer);
+    });
+
+}
+
+function resetState() {
+    nextbutton.style.display = "none";
+    while (answerButtonEl.firstChild) {
+        answerButtonEl.removeChild(answerButtonEl.firstChild);
+    }
+}
+
+function selectAnswer(e) {
+    const selectedBtn = e.target;
+    const inCorrect = selectedBtn.dataset.correct === "true";
+    if (inCorrect) {
+        selectedBtn.classList.add("correct");
+        score = score + 1;
+    } else {
+        selectedBtn.classList.add("inCorrect");
+    }
+    Array.from(answerButtonEl.children).forEach(button => {
+        if (button.dataset.correct === "true") {
+            button.classList.add("correct");
+        }
+        button.disabled = true;
+    });
+    nextbutton.style.display = "block";
+}
+
+function showScore() {
+    resetState();
+    questionEl.innerHTML = "your Scored " + score + " out of " + questions.length + "!";
+    nextbutton.innerHTML = "Play again";
+    nextbutton.style.display = "block";
+}
+
+function handleNextbutton() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    } else {
+        showScore();
+    }
+}
+nextbutton.addEventListener("click", () => {
+    if (currentQuestionIndex < questions.length) {
+        handleNextbutton();
+    } else {
+        startQuiz();
+    }
+})
+
+document.addEventListener("DOMContentLoaded", function() {
+    let minutes = 10;
+    let seconds = 0;
+    let running = false;
+    let intervalId;
+
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+    const stopwatchEl = document.getElementById("stopwatch");
+    const toggleButton = document.getElementById("toggleButton");
+
+    function updateStopwatch() {
+        if (seconds === 0) {
+            if (minutes === 0) {
+                clearInterval(intervalId);
+                running = false;
+                return;
+            }
+            minutes--;
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+
+        minutesEl.textContent = minutes.toString().padStart(2, '0');
+        secondsEl.textContent = seconds.toString().padStart(2, '0');
+    }
+
+    function startStopwatch() {
+        if (!running) {
+            running = true;
+            intervalId = setInterval(updateStopwatch, 1000);
+        }
+    }
+
+    function stopStopwatch() {
+        if (running) {
+            running = false;
+            clearInterval(intervalId);
+        }
+    }
+
+    toggleButton.addEventListener("click", function() {
+        if (stopwatchEl.style.display === 'none') {
+            stopwatchEl.style.display = 'block';
+            startStopwatch();
+        } else {
+            stopwatchEl.style.display = 'none';
+            stopStopwatch();
+        }
+    });
+
+    // Initialize stopwatch display and state
+    startStopwatch(); // Optional: Start the countdown automatically when page loads
+});
+
+
+
+
+
+startQuiz();
